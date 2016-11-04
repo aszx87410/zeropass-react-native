@@ -245,10 +245,3 @@ export function getpassword(corepassword, userdomain, changeID) {
 export function normalizeUrl(url) {
     return url.replace('http://', '').replace('https://', '').replace('www', '');
 }
-
-export const API = {
-    'createUser': 'http://122.11.130.91/api/v1/users',
-    'updateuser': 'http://122.11.130.91/api/v1/users',
-    'getUser': 'http://122.11.130.91/api/v1/users',
-    'search': 'http://122.11.130.91/api/v1/domains'
-}

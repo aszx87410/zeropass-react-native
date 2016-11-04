@@ -5,13 +5,16 @@ import {
   Text,
   View,
   Image,
-  TextInput
+  TextInput,
+  Alert
 } from 'react-native';
 import Button from 'apsl-react-native-button'
 
 import UserMainScene from './UserMainScene';
 import Spinner from 'react-native-loading-spinner-overlay';
 import store from '../store';
+import API from '../API';
+import {getpassword} from '../utils';
 
 export default class UserLoginScene extends Component {
 
@@ -25,32 +28,54 @@ export default class UserLoginScene extends Component {
     }
   }
 
-  onGoClick() {
+  async onGoClick() {
     const { navigator } = this.props;
     const { username, password } = this.state;
 
-    //驗證帳號密碼 登入
+    if(!username || !password) {
+      return;
+    }
+
+    // check username and password
     this.setState({
       spinnerShow: true
     })
 
     store.setUsername(username);
 
-    const self = this;
-    setTimeout(function(){
-      self.setState({
-        spinnerShow: false
-      })
-      if(navigator) {
-      navigator.push({
-        name: 'UserMainScene',
-        component: UserMainScene,
-        params: {
-          password: password
+    // generate site password
+    let sitePassword = getpassword(password, '0pass.com', 0);
+
+    try {
+      const data = await API.login(username, sitePassword);
+      console.log('login:', data);
+
+      // save uid, save domain info
+      if(data && data.id) {
+        Alert.alert(JSON.stringify(data));
+        if(navigator) {
+          navigator.push({
+            name: 'UserMainScene',
+            component: UserMainScene,
+            params: {
+              password: password
+            }
+          })
         }
-      })
+        this.setState({
+          spinnerShow: false
+        })
+        return;
+      }
+    } catch (err) {
+      console.log(err);
+      Alert.alert(JSON.stringify(err));
     }
-    }, 2000)
+
+    Alert.alert('Wrong username or password!');
+    this.setState({
+      spinnerShow: false
+    })
     
   }
 

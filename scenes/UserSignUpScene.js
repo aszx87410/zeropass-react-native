@@ -37,10 +37,10 @@ export default class UserSignUpScene extends Component {
 
     store.setUsername(username);
 
-    const self = this;
-
     try {
-      let response = await fetch('https://facebook.github.io/react-native/movies.json');
+      let response = await fetch('https://facebook.github.io/react-native/movies.json', {
+        
+      });
       let responseJson = await response.json();
       console.log(responseJson.movies);
       self.setState({

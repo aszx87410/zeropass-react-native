@@ -5,7 +5,8 @@ import {
   Text,
   View,
   Image,
-  TextInput
+  TextInput,
+  Alert
 } from 'react-native';
 import Button from 'apsl-react-native-button'
 
@@ -18,13 +19,21 @@ export default class GuestLoginScene extends Component {
     super(props);
 
     this.state = {
-      password: ''
+      password: '',
+      passwordAgain: ''
     }
   }
 
   onGoClick() {
     const { navigator } = this.props;
-    const { password } = this.state;
+    const { password, passwordAgain } = this.state;
+    if(!password) {
+      return;
+    }
+    if(password!==passwordAgain) {
+      Alert.alert('Please type the same password');
+      return;
+    }
     if(navigator) {
       navigator.push({
         name: 'GuestSiteScene',
@@ -42,7 +51,7 @@ export default class GuestLoginScene extends Component {
   }
 
   render() {
-    const {password} = this.state;
+    const {password, passwordAgain} = this.state;
     return (
       <View style={styles.container}>
         <View style={styles.bgImageWrapper}>
@@ -59,6 +68,16 @@ export default class GuestLoginScene extends Component {
           underlineColorAndroid='rgba(1,1,1,0)'
           autoCorrect={false}
           value={password} />
+
+        <TextInput style={styles.textInput}
+          onChangeText={ (passwordAgain) => {this.setState({passwordAgain})}}
+          placeholder='retype password'
+          secureTextEntry
+          placeholderTextColor='rgba(255,255,255,0.5)'
+          underlineColorAndroid='rgba(1,1,1,0)'
+          autoCorrect={false}
+          value={passwordAgain} />
+
         <View style={styles.btnGroup}>
           <Button style={styles.btnSignIn} textStyle={{fontSize: 18, color: 'white'}} onPress={this.onGoClick.bind(this)}>
             Go

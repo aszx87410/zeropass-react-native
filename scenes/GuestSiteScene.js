@@ -14,7 +14,8 @@ import {
 import Button from 'apsl-react-native-button'
 import GuestPasswordScene from './GuestPasswordScene';
 import store from '../store';
-import {normalizeUrl, API} from '../utils';
+import {normalizeUrl} from '../utils';
+import API from '../API';
 
 const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
 export default class GuestSiteScene extends Component {
@@ -47,12 +48,7 @@ export default class GuestSiteScene extends Component {
     // api call
     let domains = [];
     try {
-      let response = await fetch(`${API.search}/${text}`);
-      let responseJson = await response.json();
-
-      if(responseJson && responseJson.domains) {
-        domains = responseJson.domains;
-      }
+      domains = await API.getDomains(text);
       
     } catch(error) {
       console.error(error);
@@ -74,6 +70,10 @@ export default class GuestSiteScene extends Component {
 
   toNextScene(data) {
     const { navigator, password } = this.props;
+    if(!data) {
+      return;
+    }
+    
     if(navigator) {
       navigator.push({
         name: 'GuestPasswordScene',
