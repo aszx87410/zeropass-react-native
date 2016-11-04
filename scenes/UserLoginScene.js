@@ -51,7 +51,7 @@ export default class UserLoginScene extends Component {
       console.log('login:', data);
 
       // save uid, save domain info
-      if(data && data.id) {
+      if(data && data.uuid) {
         Alert.alert(JSON.stringify(data));
         if(navigator) {
           navigator.push({

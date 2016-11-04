@@ -42,8 +42,8 @@ const API = {
     return json;
   },
 
-  login: async function(username, sitePassword) {
-    let response = await fetch(`${API_URL.login}/${username}/${sitePassword}`);
+  login: async function(username, password) {
+    let response = await fetch(`${API_URL.login}/${username}/${password}`);
 
     let json = response.json();
     return json;
@@ -55,13 +55,14 @@ const API = {
     return json;
   },
 
-  update: async function(uid, domainName, changeID, username) {
-    let response = await fetch(`${API_URL.update}/${uid}/domains/{domainName}`, {
+  update: async function(uid, domainname, changeID, username) {
+    let response = await fetch(`${API_URL.update}/${uid}/domains`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
+        domainname
         changeID,
         username
       })

@@ -9,7 +9,9 @@ let data = {
   ],
 
   username: '',
-  token: ''
+  token: '',
+  domains: [],
+  password: ''
 }
 
 let store = {
@@ -30,6 +32,22 @@ let store = {
 
   getToken: () => {
     return data.token;
+  },
+
+  getDomains: () => {
+    return data.domains;
+  },
+
+  setDomains: (domains) => {
+    data.domains = domains;
+  },
+
+  getPassword: () => {
+    return data.password;
+  },
+
+  setPassword: (password) => {
+    data.password = password;
   }
 
 }
