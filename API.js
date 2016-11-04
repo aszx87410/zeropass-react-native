@@ -30,7 +30,14 @@ const API = {
       })
     });
 
-    let json = await response.json();
+    let json = {};
+    try{
+      json = await response.json();
+    } catch(err) {
+      json = {
+        response
+      }
+    }
 
     return json;
   },

@@ -5,13 +5,16 @@ import {
   Text,
   View,
   Image,
-  TextInput
+  TextInput,
+  Alert
 } from 'react-native';
 import Button from 'apsl-react-native-button'
 
 import UserMainScene from './UserMainScene';
 import Spinner from 'react-native-loading-spinner-overlay';
 import store from '../store';
+import API from '../API';
+import {getpassword} from '../utils';
 
 export default class UserSignUpScene extends Component {
 
@@ -30,25 +33,54 @@ export default class UserSignUpScene extends Component {
     const { navigator } = this.props;
     const { username, password, passwordAgain } = this.state;
 
+    if(!username || !password) {
+      return;
+    }
+
+    if(password!==passwordAgain) {
+      Alert.alert('Please input the same password');
+      return;
+    }
+
     //create new member
     this.setState({
       spinnerShow: true
     })
 
     store.setUsername(username);
+    let sitePassword = getpassword(password, '0pass.com', 0);
 
     try {
-      let response = await fetch('https://facebook.github.io/react-native/movies.json', {
-        
-      });
-      let responseJson = await response.json();
-      console.log(responseJson.movies);
-      self.setState({
-        spinnerShow: false
-      })
+      let response = await API.createUser(username, sitePassword);
+
+      // store information
+      Alert.alert(JSON.stringify(response));
+      if(response && response.uuid) {
+
+        if(navigator) {
+          navigator.push({
+            name: 'UserMainScene',
+            component: UserMainScene,
+            params: {
+              password: password
+            }
+          })
+        }
+        this.setState({
+          spinnerShow: false
+        })
+        return;
+      }
+
     } catch(error) {
+      Alert.alert(JSON.stringify(error));
       console.error(error);
     }
+
+    Alert.alert('Error');
+    this.setState({
+      spinnerShow: false
+    })
 
   }
 
