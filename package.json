@@ -11,6 +11,7 @@
     "react": "15.3.2",
     "react-addons-shallow-compare": "^15.3.2",
     "react-native": "^0.35.0",
+    "react-native-google-signin": "^0.8.1",
     "react-native-loading-spinner-overlay": "^0.3.0",
     "react-native-tab-view": "0.0.37"
   },

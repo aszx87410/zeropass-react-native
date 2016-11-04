@@ -18,6 +18,8 @@ export default class PasswordScene extends Component {
   constructor(props) {
     super(props);
 
+    this.onCopy = this.onCopy.bind(this);
+
     this.state = {
       username: ''
     }
@@ -63,7 +65,9 @@ export default class PasswordScene extends Component {
               underlineColorAndroid='rgba(0,0,0,0)'
               autoCorrect={false}
               value={pwd} />
-             <Button style={styles.btn} textStyle={{fontSize: 18, color: 'white'}} onPress={()=> this.onCopy(pwd).bind(this)}>
+             <Button style={styles.btn} 
+                textStyle={{fontSize: 18, color: 'white'}} 
+                onPress={()=> this.onCopy(pwd)}>
               Copy
             </Button>
           </View>
