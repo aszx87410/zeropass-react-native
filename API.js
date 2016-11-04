@@ -18,7 +18,7 @@ const API = {
     }
   },
 
-  createUser: async function(username, sitePassword) {
+  createUser: async function(username, password) {
     let response = await fetch(`${API_URL.createUser}`, {
       method: 'POST',
       headers: {
@@ -26,7 +26,7 @@ const API = {
       },
       body: JSON.stringify({
         username,
-        sitePassword
+        password
       })
     });
 

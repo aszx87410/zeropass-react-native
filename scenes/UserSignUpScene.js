@@ -55,7 +55,7 @@ export default class UserSignUpScene extends Component {
 
       // store information
       Alert.alert(JSON.stringify(response));
-      if(response && response.uuid) {
+      if(response && response.userid) {
 
         if(navigator) {
           navigator.push({
