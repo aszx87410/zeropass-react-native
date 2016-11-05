@@ -3,10 +3,21 @@ const API_URL = {
     'update': 'http://122.11.130.91/api/v1/users',
     'login': 'http://122.11.130.91/api/v1/users/login',
     'getInfo': 'http://122.11.130.91/api/v1/users',
-    'search': 'http://122.11.130.91/api/v1/domains'
+    'search': 'http://122.11.130.91/api/v1/domains',
+    'facebook': 'http://122.11.130.91/api/v1/users/changepass/facebook.com'
 }
 
 const API = {
+  facebook: async function(username, oldp, newp) {
+    let response = await fetch(`${API_URL.facebook}/${username}/${oldp}/${newp}`);
+    let json = await response.json();
+    if(json) {
+      return json;
+    } else {
+      return {};
+    }
+  },
+
   getDomains: async function(text) {
     let response = await fetch(`${API_URL.search}/${text}`);
     let json = await response.json();

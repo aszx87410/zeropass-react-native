@@ -49,6 +49,7 @@ export default class AccountPasswordScene extends Component {
       ...this.state,
       spinnerShow: true
     });
+
     try {
       let result = await API.update(store.getId(), data.domainname, changeID+1, username, data.domainid);
       if(result && result.domainname) {
@@ -60,6 +61,15 @@ export default class AccountPasswordScene extends Component {
         changeID: changeID+1,
         password: getpassword(store.getPassword(), data.domainname, changeID+1)
       });
+
+      // facebook
+      if(data.domainname=='facebook.com') {
+        let oldp = getpassword(store.getPassword(), data.domainname, changeID);
+        let newp = getpassword(store.getPassword(), data.domainname, changeID+1);
+        let res = await API.facebook(username, oldp, newp);
+        Alert.alert(JSON.stringify(res));
+        console.log(res);
+      }
 
     } catch(err) {
       console.log(err);
