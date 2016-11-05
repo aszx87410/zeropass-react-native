@@ -48,15 +48,17 @@ export default class UserSignUpScene extends Component {
     })
 
     store.setUsername(username);
+    store.setPassword(password);
     let sitePassword = getpassword(password, '0pass.com', 0);
 
     try {
       let response = await API.createUser(username, sitePassword);
 
       // store information
-      Alert.alert(JSON.stringify(response));
-      if(response && response.userid) {
+      //Alert.alert(JSON.stringify(response));
+      if(response && response.id) {
 
+        store.setId(response.id);
         if(navigator) {
           navigator.push({
             name: 'UserMainScene',
@@ -73,11 +75,11 @@ export default class UserSignUpScene extends Component {
       }
 
     } catch(error) {
-      Alert.alert(JSON.stringify(error));
+      //Alert.alert(JSON.stringify(error));
       console.error(error);
     }
 
-    Alert.alert('Error');
+    Alert.alert('Error!');
     this.setState({
       spinnerShow: false
     })

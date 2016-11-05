@@ -17,16 +17,21 @@ import API from '../../API';
 import store from '../../store';
 import Spinner from 'react-native-loading-spinner-overlay';
 
-export default class PasswordScene extends Component {
+export default class AccountPasswordScene extends Component {
 
   constructor(props) {
     super(props);
 
     this.onCopy = this.onCopy.bind(this);
 
+    const data = props.data;
+    let password = getpassword(store.getPassword(), data.domainname, data.changeID);
+
     this.state = {
-      username: '',
-      spinnerShow: false
+      username: data.username,
+      spinnerShow: false,
+      password,
+      changeID: parseInt(data.changeID, 10)
     }
 
   }
@@ -36,20 +41,48 @@ export default class PasswordScene extends Component {
     ToastAndroid.show('copied!', ToastAndroid.SHORT);
   }
 
-  onChange() {
+  async onChange() {
+    const {data} = this.props;
+    const {changeID, username} = this.state;
 
+    this.setState({
+      ...this.state,
+      spinnerShow: true
+    });
+    try {
+      let result = await API.update(store.getId(), data.domainname, changeID+1, username, data.domainid);
+      if(result && result.domainname) {
+        Alert.alert('Success!');
+      }
+      this.setState({
+        ...this.state,
+        spinnerShow: false,
+        changeID: changeID+1,
+        password: getpassword(store.getPassword(), data.domainname, changeID+1)
+      });
+
+    } catch(err) {
+      console.log(err);
+      Alert.alert(JSON.stringify(err));
+    }
+
+    this.setState({
+      ...this.state,
+      spinnerShow: false
+    })
   }
 
   // save
   async onSave() {
-    const {site} = this.props;
+    const {data} = this.props;
     const {username} = this.state;
 
     this.setState({
+      ...this.state,
       spinnerShow: true
     });
     try {
-      let result = await API.update(store.getId(), site, 0, username);
+      let result = await API.update(store.getId(), data.domainname, data.changeID, username, data.domainid);
       if(result && result.domainname) {
         Alert.alert('Success!');
       }
@@ -59,16 +92,17 @@ export default class PasswordScene extends Component {
     }
 
     this.setState({
+      ...this.state,
       spinnerShow: false
     })
   }
 
   render() {
 
-    const {site, password} = this.props;
-    const {username} = this.state;
+    const {data} = this.props;
+    const {username, password} = this.state;
 
-    const pwd = getpassword(password, site, 0);
+    //const pwd = getpassword(store.getPassword(), data.domainname, data.changeID);
 
     return (
       <View style={styles.container}>
@@ -78,7 +112,7 @@ export default class PasswordScene extends Component {
             Password for
           </Text>
           <Text style={styles.textFor}>
-            {site}
+            {data.domainname}
           </Text>
 
           <View style={{
@@ -88,10 +122,10 @@ export default class PasswordScene extends Component {
             <TextInput style={styles.text1}
               underlineColorAndroid='rgba(0,0,0,0)'
               autoCorrect={false}
-              value={pwd} />
+              value={password} />
              <Button style={styles.btn} 
                 textStyle={{fontSize: 18, color: 'white'}} 
-                onPress={()=> this.onCopy(pwd)}>
+                onPress={()=> this.onCopy(password)}>
               Copy
             </Button>
           </View>
@@ -205,4 +239,4 @@ const styles = StyleSheet.create({
   },
 });
 
-AppRegistry.registerComponent('PasswordScene', () => PasswordScene);
+AppRegistry.registerComponent('AccountPasswordScene', () => AccountPasswordScene);

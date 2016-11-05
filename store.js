@@ -11,7 +11,8 @@ let data = {
   username: '',
   token: '',
   domains: [],
-  password: ''
+  password: '',
+  id: ''
 }
 
 let store = {
@@ -48,6 +49,14 @@ let store = {
 
   setPassword: (password) => {
     data.password = password;
+  },
+
+  setId: (id) => {
+    data.id = id;
+  },
+
+  getId: () => {
+    return data.id;
   }
 
 }

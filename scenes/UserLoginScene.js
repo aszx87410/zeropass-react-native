@@ -48,11 +48,13 @@ export default class UserLoginScene extends Component {
 
     try {
       const data = await API.login(username, sitePassword);
-      console.log('login:', data);
+      //console.log('login:', data);
+      //Alert.alert(JSON.stringify(data));
 
-      // save uid, save domain info
-      if(data && data.uuid) {
-        Alert.alert(JSON.stringify(data));
+      // save uid
+      if(data && data.id) {
+        //Alert.alert(JSON.stringify(data));
+        store.setId(data.id);
         if(navigator) {
           navigator.push({
             name: 'UserMainScene',

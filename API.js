@@ -50,22 +50,44 @@ const API = {
   },
 
   getInfo: async function(uid) {
+
     let response = await fetch(`${API_URL.getInfo}/${uid}`);
     let json = await response.json();
+    try {
+
+      if(json.domains) {
+        let domains = [];
+        for(let key in json.domains) {
+          domains.push(json.domains[key]);
+        }
+        json.domains = domains;
+        console.log(domains);
+      }
+      
+    } catch(err) {
+      console.log(err);
+    }
+    console.log('json', json);
     return json;
   },
 
-  update: async function(uid, domainname, changeID, username) {
+  update: async function(uid, domainname, changeID, username, domainid) {
+
+    const jsonBody = {
+        domainname,
+        changeID,
+        username,
+    };
+    if(domainid) {
+      jsonBody.domainid = domainid;
+    }
+
     let response = await fetch(`${API_URL.update}/${uid}/domains`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({
-        domainname
-        changeID,
-        username
-      })
+      body: JSON.stringify(jsonBody)
     });
 
     let json = response.json();

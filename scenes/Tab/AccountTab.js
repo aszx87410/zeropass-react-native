@@ -2,69 +2,54 @@ import React, { Component } from 'react';
 import {
   AppRegistry,
   StyleSheet,
+  Alert,
   Text,
   View,
-  Image,
-  TextInput,
-  ListView,
   TouchableOpacity
 } from 'react-native';
 
-const settingList = [
-  'facebook.com',
-  'github.com',
-  'yahoo.com',
-  'garena.com'
-]
+import AccountScene from './AccountScene';
+import AccountPasswordScene from './AccountPasswordScene';
 
-const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
 export default class AccountTab extends Component {
 
   constructor(props) {
     super(props);
-
-    this.onPress = this.onPress.bind(this);
-
+    
+    // 2 page
     this.state = {
-      dataSource: ds.cloneWithRows(settingList)
+      page: 1,
+      data: {}
     }
   }
 
-  onPress(data) {
-    //url
+  goBack() {
+    this.setState({
+      page: 1
+    })
+  }
+
+  toNext(data) {
+    this.setState({
+      ...this.state,
+      page: 2,
+      data
+    })
   }
 
   render() {
 
-    let that = this;
-
-    const press = (data) => {
-      return function(){
-        that.onPress(data);
-      }
-    }
-
-    const getRow = (data) => {
-      return (
-        <TouchableOpacity style={styles.row} onPress={press(data)}>
-          <Text style={styles.text}>{data}</Text>
-        </TouchableOpacity>
-      )
-    }
+    const { page, data } = this.state;
 
     return (
         <View style={styles.container}>
-          <View style={{
-            flex: 1,
-          }}>
-            <View style={styles.list}>
-              <ListView
-                enableEmptySections
-                dataSource={this.state.dataSource}
-                renderRow={(rowData) => getRow(rowData)} /> 
-            </View>
-            
+          <View style={styles.top}>
+            <Text style={styles.back} onPress={this.goBack.bind(this)}>
+              { page==2 ? ' ← ' : ' ' }
+            </Text>
           </View>
+          {page==1 && <AccountScene key={parseInt(Math.random()*999)} toNext={this.toNext.bind(this)}/>}
+          {page==2 && <AccountPasswordScene data={data}/>}
         </View>
     );
   }
@@ -73,24 +58,18 @@ export default class AccountTab extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#eee',
+    justifyContent: 'center',
+    backgroundColor: 'white',
   },
 
-  list: {
-    marginTop: 0,
-    flex: 1
+  top: {
+    height: 40, 
+    backgroundColor: '#48baeb'
   },
 
-  text: {
-    fontSize: 20,
-    color: '#48baeb',
-    padding: 10,
-    borderBottomWidth: 1,
-    borderBottomColor: '#aaa'
-  },
-
-  row: {
-    backgroundColor: '#eee'
+  back: {
+    color: 'white',
+    fontSize: 30
   }
 });
 

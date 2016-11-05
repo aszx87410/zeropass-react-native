@@ -90,7 +90,9 @@ export default class TabViewExample extends Component {
   };
 
   _renderScene = ({ route }) => {
+    console.log(route.key);
     switch (route.key) {
+
       case 'account':
         return <AccountTab />;
       case 'new':
