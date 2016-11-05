@@ -52,22 +52,31 @@ export default class AccountPasswordScene extends Component {
 
     try {
       let result = await API.update(store.getId(), data.domainname, changeID+1, username, data.domainid);
-      if(result && result.domainname) {
+      if(result && result.domainname && data.domainname!='facebook.com') {
         Alert.alert('Success!');
       }
       this.setState({
         ...this.state,
-        spinnerShow: false,
+        spinnerShow: data.domainname!='facebook.com'?false:true,
         changeID: changeID+1,
         password: getpassword(store.getPassword(), data.domainname, changeID+1)
       });
 
       // facebook
       if(data.domainname=='facebook.com') {
+        this.setState({
+          ...this.state,
+          spinnerShow: true
+        })
         let oldp = getpassword(store.getPassword(), data.domainname, changeID);
         let newp = getpassword(store.getPassword(), data.domainname, changeID+1);
         let res = await API.facebook(username, oldp, newp);
-        Alert.alert(JSON.stringify(res));
+        if(res.ret) {
+          Alert.alert('Successfully change the facebook password!');
+        } else {
+          Alert.alert('Fail QQ');
+        }
+        
         console.log(res);
       }
 
@@ -110,12 +119,13 @@ export default class AccountPasswordScene extends Component {
   render() {
 
     const {data} = this.props;
-    const {username, password} = this.state;
+    const {username, password, spinnerShow} = this.state;
 
     //const pwd = getpassword(store.getPassword(), data.domainname, data.changeID);
 
     return (
       <View style={styles.container}>
+        <Spinner visible={spinnerShow} />
         <View>
           <Image source={require('../../img/logo-reverse.png')} style={styles.image}/>
           <Text style={styles.text}>
